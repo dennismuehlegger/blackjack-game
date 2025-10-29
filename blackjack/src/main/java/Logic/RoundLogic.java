@@ -86,7 +86,7 @@ public class RoundLogic {
             }
 
             for (Player player : players) {
-                if (player.isOut()) {
+                if (player.isOut() || player.isStanding()) {
                     continue;
                 }
 
@@ -110,25 +110,28 @@ public class RoundLogic {
         System.out.println("Current hand: " + player.getHandValue());
 
         String answer;
-        do {
-            System.out.print(player + ", do you want a card? (yes/no): ");
-            answer = scanner.nextLine().toLowerCase().trim();
-        } while (!answer.equals("yes") && !answer.equals("no"));
+        if (!player.isStanding()) {
+            do {
+                System.out.print(player + ", do you want a card? (yes/no): ");
+                answer = scanner.nextLine().toLowerCase().trim();
+            } while (!answer.equals("yes") && !answer.equals("no"));
 
-        if (answer.equals("yes")) {
-            Card card = cardLogic.drawCard();
-            player.addCard(card);
-            System.out.println("\n" + player + " draws: " + card);
-            System.out.println("New hand: " + player.getHandValue());
+            if (answer.equals("yes")) {
+                Card card = cardLogic.drawCard();
+                player.addCard(card);
+                System.out.println("\n" + player + " draws: " + card);
+                System.out.println("New hand: " + player.getHandValue());
 
-            if (player.isBust()) {
-                System.out.println(player + " is over " + BLACKJACK + " and busted!");
-                player.setOut(true);
-            } else if (player.hasBlackjack()) {
-                System.out.println(player + " has exactly " + BLACKJACK + "!");
+                if (player.isBust()) {
+                    System.out.println(player + " is over " + BLACKJACK + " and busted!");
+                    player.setOut(true);
+                } else if (player.hasBlackjack()) {
+                    System.out.println(player + " has exactly " + BLACKJACK + "!");
+                }
+            } else {
+                System.out.println(player + " doesnt draw (hand stays " + player.getHandValue() + ")");
+                player.setStanding(true);
             }
-        } else {
-            System.out.println(player + " doesnt draw (hand stays " + player.getHandValue() + ")");
         }
     }
 }

@@ -46,6 +46,12 @@ public class BlackjackGame {
             return true;
         }
 
+        boolean allStanding = activePlayers.stream().allMatch(Player::isStanding);
+        if (allStanding) {
+            determineWinner();
+            return true;
+        }
+
         return false;
     }
 

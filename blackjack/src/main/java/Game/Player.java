@@ -7,6 +7,7 @@ public class Player {
     private String name;
     private List<Card> hand;
     private boolean isOut;
+    private boolean standing;
 
     public Player(String name) {
         this.name = name;
@@ -55,6 +56,14 @@ public class Player {
 
     public boolean isBust() {
         return getHandValue() > 21;
+    }
+
+    public boolean isStanding() {
+        return standing;
+    }
+
+    public void setStanding(boolean standing) {
+        this.standing = standing;
     }
 
     public boolean hasBlackjack() {
