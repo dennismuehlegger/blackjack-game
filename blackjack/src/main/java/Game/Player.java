@@ -38,6 +38,18 @@ public class Player {
         return value;
     }
 
+    public String getFullHand() {
+        StringBuilder handStr = new StringBuilder();
+        for (int i = 0; i < hand.size(); i++) {
+            Card card = hand.get(i);
+            handStr.append(card.getRank()).append(card.getSuit());
+            if (i < hand.size() - 1) {
+                handStr.append(", ");
+            }
+        }
+        return handStr.toString();
+    }
+
     public List<Card> getHand() {
         return hand;
     }

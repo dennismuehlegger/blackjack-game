@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class RoundLogic {
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 7;
-    private static final int BLACKJACK = 21;
+    private static final int HIGHEST_SCORE = 21;
     private static final int MAX_ROUNDS = 5;
 
     private CardLogic cardLogic;
@@ -50,18 +50,19 @@ public class RoundLogic {
     public void playRounds() {
         List<Player> blackjackPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getHandValue() == BLACKJACK) {
+            if (player.getHandValue() == HIGHEST_SCORE) {
                 blackjackPlayers.add(player);
             }
         }
 
         if (!blackjackPlayers.isEmpty()) {
+            blackjackGame.showFinalHands();
             System.out.println("\n" + "=".repeat(40));
             if (blackjackPlayers.size() == 1) {
-                System.out.println("*** " + blackjackPlayers.get(0) + " has BLACKJACK and wins! ***");
+                System.out.println("*** " + blackjackPlayers.get(0) + " has 21 and wins! ***");
             } else {
                 System.out.println("*** TIE! ***");
-                System.out.print("Players with BLACKJACK: ");
+                System.out.print("Players with 21: ");
                 for (int i = 0; i < blackjackPlayers.size(); i++) {
                     System.out.print(blackjackPlayers.get(i));
                     if (i < blackjackPlayers.size() - 1) {
@@ -91,7 +92,7 @@ public class RoundLogic {
                 }
 
                 if (player.hasBlackjack()) {
-                    System.out.println("\n*** " + player + " has BLACKJACK and wins! ***");
+                    System.out.println("\n*** " + player + " has 21 and wins! ***");
                     return;
                 }
 
@@ -123,10 +124,10 @@ public class RoundLogic {
                 System.out.println("New hand: " + player.getHandValue());
 
                 if (player.isBust()) {
-                    System.out.println(player + " is over " + BLACKJACK + " and busted!");
+                    System.out.println(player + " is over " + HIGHEST_SCORE + " and busted!");
                     player.setOut(true);
                 } else if (player.hasBlackjack()) {
-                    System.out.println(player + " has exactly " + BLACKJACK + "!");
+                    System.out.println(player + " has exactly " + HIGHEST_SCORE + "!");
                 }
             } else {
                 System.out.println(player + " doesnt draw (hand stays " + player.getHandValue() + ")");
