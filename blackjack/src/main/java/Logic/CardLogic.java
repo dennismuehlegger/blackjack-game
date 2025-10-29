@@ -49,7 +49,7 @@ public class CardLogic {
     }
 
     public void dealInitialCards() throws InterruptedException {
-        System.out.println("=== First deal ===");
+        System.out.println("--- First deal ---");
 
         for (Player player : players) {
             Card card = drawCard();
@@ -74,10 +74,14 @@ public class CardLogic {
     public void showAllHands() {
         System.out.println("\n=== Current hand ===");
         for (Player player : players) {
-            if (!player.isOut()) {
-                System.out.printf("%s: %d%n", player.getName(), player.getHandValue());
-            } else {
+            if (player.isOut()) {
                 System.out.printf("%s: %d (Busted)%n", player.getName(), player.getHandValue());
+            }
+            else if (player.isStanding()){
+                System.out.printf("%s: %d (Standing)%n", player.getName(), player.getHandValue());
+            }
+            else {
+                System.out.printf("%s: %d%n", player.getName(), player.getHandValue());
             }
         }
         System.out.println();

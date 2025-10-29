@@ -32,6 +32,7 @@ public class BlackjackGame {
         }
 
         if (activePlayers.size() == 1) {
+            showFinalHands();
             System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
             System.out.println("*** " + activePlayers.get(0) + " wins! ***");
             System.out.println("Hand: " + activePlayers.get(0).getHandValue());
@@ -40,6 +41,7 @@ public class BlackjackGame {
         }
 
         if (activePlayers.isEmpty()) {
+            showFinalHands();
             System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
             System.out.println("All players busted. Nobody wins!");
             System.out.println("=".repeat(SEPARATOR_LENGTH));
@@ -55,7 +57,33 @@ public class BlackjackGame {
         return false;
     }
 
+    public void showFinalHands() {
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
+        System.out.println("*** FINAL HANDS ***");
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
+
+        for (Player player : players) {
+            String status = "";
+            if (player.isOut()) {
+                status = " (Busted)";
+            } else if (player.isStanding()) {
+                status = " (Standing)";
+            }
+
+            System.out.printf("%s: %s = %d%s%n",
+                    player.getName(),
+                    player.getFullHand(),
+                    player.getHandValue(),
+                    status
+            );
+        }
+
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
+    }
+
+
     public void determineWinner() {
+        showFinalHands();
         Player winner = null;
         int highestValue = 0;
 
