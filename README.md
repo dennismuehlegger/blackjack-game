@@ -2,12 +2,12 @@
 A console-based Blackjack adjacent game with the objective getting to 21 points.
 
 ## features and rules
-- **multi-deck support**: configure the number of decks used
+- **multi-deck support**: configure number of decks used
 - **multi-player**: configurable amount of players (up to 7 players without a dealer)
 - **initial deal**: players get two initial cards when round begins
 - **player actions**:
-- **hit**: draw another card
-- **stand**: keep current hand and stop drawing
+- hit: draw another card
+- stand: keep current hand and stop drawing
 - **win conditions**:
 - player closest to 21 points wins
 - player with exactly 21 points wins automatically
