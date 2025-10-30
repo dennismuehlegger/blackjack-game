@@ -66,7 +66,7 @@ public class Player {
         isOut = out;
     }
 
-    public boolean isBust() {
+    public boolean isBusted() {
         return getHandValue() > 21;
     }
 
