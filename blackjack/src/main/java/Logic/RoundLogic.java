@@ -106,7 +106,7 @@ public class RoundLogic {
         blackjackGame.determineWinner();
     }
 
-    private void playTurn(Player player) {
+    public void playTurn(Player player) {
         System.out.println("\n--- " + player + " turn ---");
         System.out.println("Current hand: " + player.getHandValue());
 
