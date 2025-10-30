@@ -113,7 +113,7 @@ public class RoundLogic {
         String answer;
         if (!player.isStanding()) {
             do {
-                System.out.print(player + ", do you want a card? (yes/no): ");
+                System.out.print(player + ", do you want to hit? (yes/no): ");
                 answer = scanner.nextLine().toLowerCase().trim();
             } while (!answer.equals("yes") && !answer.equals("no"));
 
@@ -123,14 +123,14 @@ public class RoundLogic {
                 System.out.println("\n" + player + " draws: " + card);
                 System.out.println("New hand: " + player.getHandValue());
 
-                if (player.isBust()) {
+                if (player.isBusted()) {
                     System.out.println(player + " is over " + HIGHEST_SCORE + " and busted!");
                     player.setOut(true);
                 } else if (player.hasBlackjack()) {
                     System.out.println(player + " has exactly " + HIGHEST_SCORE + "!");
                 }
             } else {
-                System.out.println(player + " doesnt draw (hand stays " + player.getHandValue() + ")");
+                System.out.println(player + " stands (hand stays " + player.getHandValue() + ")");
                 player.setStanding(true);
             }
         }
