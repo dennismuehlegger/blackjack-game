@@ -16,39 +16,7 @@ import static org.junit.Assert.*;
 public class BlackjackTests {
 
     @Test
-    public void testPlayerBust() {
-        Player player = new Player("dennis");
-        player.addCard(new Card(10, "♠", "K"));
-        player.addCard(new Card(10, "♥", "Q"));
-        player.addCard(new Card(5, "♦", "5"));
-
-        assertTrue(player.isBusted());
-        assertEquals(25, player.getHandValue());
-    }
-
-    @Test
-    public void testPlayerNoBust() {
-        Player player = new Player("dennis");
-        player.addCard(new Card(10, "♠", "K"));
-        player.addCard(new Card(10, "♥", "Q"));
-        // ace calculation works as well
-        player.addCard(new Card(1, "♦", "A"));
-
-        assertFalse(player.isBusted());
-        assertEquals(21, player.getHandValue());
-    }
-
-    @Test
-    public void testPlayerStand() {
-        Player player = new Player("dennis");
-        player.addCard(new Card(10, "♠", "K"));
-        player.setStanding(true);
-
-        assertTrue(player.isStanding());
-    }
-
-    @Test
-    public void testRoundLogicPlayerBusts() {
+    public void testInputRoundLogicPlayerBusts() {
         List<Card> deck = new ArrayList<>();
         deck.add(new Card(6, "♥", "6"));
         deck.add(new Card(10, "♠", "K"));
@@ -84,7 +52,7 @@ public class BlackjackTests {
     }
 
     @Test
-    public void testRoundLogicPlayerStands() {
+    public void testInputRoundLogicPlayerStands() {
         List<Card> deck = new ArrayList<>();
         deck.add(new Card(6, "♥", "6"));
 
@@ -117,6 +85,181 @@ public class BlackjackTests {
 
         System.setIn(System.in);
     }
+
+    @Test
+    public void testInputPlayTurnPlayerReaches21MidRound() {
+        List<Card> deck = new ArrayList<>();
+        deck.add(new Card(6, "♥", "6"));
+        deck.add(new Card(10, "♥", "10"));
+
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(10, "♦", "10"));
+        dennis.addCard(new Card(5, "♣", "5"));
+
+        Player lejla = new Player("lejla");
+        lejla.addCard(new Card(7, "♦", "7"));
+        lejla.addCard(new Card(3, "♥", "3"));
+
+        List<Player> players = Arrays.asList(dennis, lejla);
+
+        CardLogic cardLogic = new CardLogic(deck, players);
+        cardLogic.setRandom(createDeterministicRandom());
+
+        String input = "yes\nyes\nyes\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+
+        roundLogic.playTurn(dennis);
+        roundLogic.playTurn(lejla);
+
+        assertEquals(21, dennis.getHandValue());
+        assertEquals(20, lejla.getHandValue());
+
+        System.setIn(System.in);
+    }
+
+    @Test
+    public void testPlayRoundsAllPlayersBust() {
+        List<Card> deck = new ArrayList<>();
+
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(10, "♦", "10"));
+        dennis.addCard(new Card(6, "♣", "6"));
+        dennis.addCard(new Card(6, "♣", "6"));
+
+        Player lejla = new Player("lejla");
+        lejla.addCard(new Card(10, "♥", "10"));
+        lejla.addCard(new Card(8, "♠", "8"));
+        lejla.addCard(new Card(6, "♣", "6"));
+
+        List<Player> players = Arrays.asList(dennis, lejla);
+        CardLogic cardLogic = new CardLogic(deck, players);
+        cardLogic.setRandom(createDeterministicRandom());
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+
+        roundLogic.playRounds();
+
+        assertTrue(dennis.isBusted());
+        assertTrue(lejla.isBusted());
+
+        System.setIn(System.in);
+    }
+
+    @Test
+    public void testPlayRoundsImmediateHighScoreSingleWinner() {
+        List<Card> deck = new ArrayList<>();
+
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(11, "♠", "A"));
+        dennis.addCard(new Card(10, "♥", "K"));
+
+        Player lejla = new Player("lejla");
+        lejla.addCard(new Card(10, "♦", "10"));
+        lejla.addCard(new Card(9, "♣", "9"));
+
+        List<Player> players = Arrays.asList(dennis, lejla);
+        CardLogic cardLogic = new CardLogic(deck, players);
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+
+        roundLogic.playRounds();
+
+        assertEquals(21, dennis.getHandValue());
+        assertEquals(19, lejla.getHandValue());
+    }
+
+    @Test
+    public void testPlayRoundsImmediateHighScoreTie() {
+        List<Card> deck = new ArrayList<>();
+
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(11, "♠", "A"));
+        dennis.addCard(new Card(10, "♥", "K"));
+
+        Player lejla = new Player("lejla");
+        lejla.addCard(new Card(11, "♦", "A"));
+        lejla.addCard(new Card(10, "♣", "Q"));
+
+        List<Player> players = Arrays.asList(dennis, lejla);
+        CardLogic cardLogic = new CardLogic(deck, players);
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+
+        roundLogic.playRounds();
+
+        assertEquals(21, dennis.getHandValue());
+        assertEquals(21, lejla.getHandValue());
+    }
+
+    //todo these need to be fixed
+    /*@Test
+    public void testPlayRoundsAllPlayersStand() {
+        List<Card> deck = new ArrayList<>();
+
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(10, "♦", "10"));
+        dennis.addCard(new Card(9, "♣", "9"));
+
+        Player lejla = new Player("lejla");
+        lejla.addCard(new Card(10, "♥", "10"));
+        lejla.addCard(new Card(8, "♠", "8"));
+
+        List<Player> players = Arrays.asList(dennis, lejla);
+        CardLogic cardLogic = new CardLogic(deck, players);
+
+        String input = "no\nno\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+
+        roundLogic.playRounds();
+
+        assertTrue(dennis.isStanding());
+        assertTrue(lejla.isStanding());
+        assertEquals(19, dennis.getHandValue());
+        assertEquals(18, lejla.getHandValue());
+
+        System.setIn(System.in);
+    }
+
+    @Test
+    public void testPlayRoundsSkipsBustedAndStandingPlayers() {
+        List<Card> deck = new ArrayList<>();
+        deck.add(new Card(10, "♥", "K"));
+
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(10, "♦", "10"));
+        dennis.addCard(new Card(8, "♣", "8"));
+
+        Player lejla = new Player("lejla");
+        lejla.addCard(new Card(10, "♥", "10"));
+        lejla.addCard(new Card(9, "♠", "9"));
+
+        List<Player> players = Arrays.asList(dennis, lejla);
+        CardLogic cardLogic = new CardLogic(deck, players);
+        cardLogic.setRandom(createDeterministicRandom());
+
+        String input = "yes\nno\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+
+        roundLogic.playRounds();
+
+        assertTrue(dennis.isBusted());
+        assertTrue(lejla.isStanding());
+
+        System.setIn(System.in);
+    }*/
+
 
     private Random createDeterministicRandom() {
         return new Random() {

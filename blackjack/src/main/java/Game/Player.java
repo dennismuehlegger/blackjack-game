@@ -78,7 +78,7 @@ public class Player {
         this.standing = standing;
     }
 
-    public boolean hasBlackjack() {
+    public boolean hasHighScore() {
         return getHandValue() == 21;
     }
 

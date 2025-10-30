@@ -48,63 +48,95 @@ public class RoundLogic {
     }
 
     public void playRounds() {
-        List<Player> blackjackPlayers = new ArrayList<>();
-        for (Player player : players) {
-            if (player.getHandValue() == HIGHEST_SCORE) {
-                blackjackPlayers.add(player);
-            }
-        }
-
-        if (!blackjackPlayers.isEmpty()) {
-            blackjackGame.showFinalHands();
-            System.out.println("\n" + "=".repeat(40));
-            if (blackjackPlayers.size() == 1) {
-                System.out.println("*** " + blackjackPlayers.get(0) + " has 21 and wins! ***");
-            } else {
-                System.out.println("*** TIE! ***");
-                System.out.print("Players with 21: ");
-                for (int i = 0; i < blackjackPlayers.size(); i++) {
-                    System.out.print(blackjackPlayers.get(i));
-                    if (i < blackjackPlayers.size() - 1) {
-                        System.out.print(", ");
-                    }
-                }
-                System.out.println();
-            }
-            System.out.println("=".repeat(BlackjackGame.SEPARATOR_LENGTH));
+        if (handleInitialHighScore()) {
             return;
         }
 
         for (int round = 1; round <= MAX_ROUNDS; round++) {
-            System.out.println("\n" + "=".repeat(BlackjackGame.SEPARATOR_LENGTH));
-            System.out.println("*** ROUND " + round + " ***");
-            System.out.println("=".repeat(BlackjackGame.SEPARATOR_LENGTH));
-
+            printRoundHeader(round);
             cardLogic.showAllHands();
 
             if (blackjackGame.checkWinCondition()) {
                 return;
             }
 
-            for (Player player : players) {
-                if (player.isOut() || player.isStanding()) {
-                    continue;
-                }
-
-                if (player.hasBlackjack()) {
-                    System.out.println("\n*** " + player + " has 21 and wins! ***");
-                    return;
-                }
-
-                playTurn(player);
-
-                if (blackjackGame.checkWinCondition()) {
-                    return;
-                }
+            if (processPlayerTurns()) {
+                return;
             }
         }
+
         blackjackGame.determineWinner();
     }
+
+    private boolean handleInitialHighScore() {
+        List<Player> highScorePlayers = getPlayersWithHighScore();
+
+        if (highScorePlayers.isEmpty()) {
+            return false;
+        }
+
+        blackjackGame.showFinalHands();
+        System.out.println("\n" + "=".repeat(40));
+
+        if (highScorePlayers.size() == 1) {
+            System.out.println("*** " + highScorePlayers.get(0) + " has 21 and wins! ***");
+        } else {
+            printTieMessage(highScorePlayers);
+        }
+
+        System.out.println("=".repeat(BlackjackGame.SEPARATOR_LENGTH));
+        return true;
+    }
+
+    private List<Player> getPlayersWithHighScore() {
+        List<Player> highScorePlayers = new ArrayList<>();
+        for (Player player : players) {
+            if (player.getHandValue() == HIGHEST_SCORE) {
+                highScorePlayers.add(player);
+            }
+        }
+        return highScorePlayers;
+    }
+
+    private void printTieMessage(List<Player> highScorePlayers) {
+        System.out.println("*** TIE! ***");
+        System.out.print("Players with 21: ");
+        for (int i = 0; i < highScorePlayers.size(); i++) {
+            System.out.print(highScorePlayers.get(i));
+            if (i < highScorePlayers.size() - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println();
+    }
+
+    private void printRoundHeader(int round) {
+        System.out.println("\n" + "=".repeat(BlackjackGame.SEPARATOR_LENGTH));
+        System.out.println("*** ROUND " + round + " ***");
+        System.out.println("=".repeat(BlackjackGame.SEPARATOR_LENGTH));
+    }
+
+    private boolean processPlayerTurns() {
+        for (Player player : players) {
+            if (player.isBusted() || player.isStanding()) {
+                continue;
+            }
+
+            if (player.hasHighScore()) {
+                blackjackGame.showFinalHands();
+                System.out.println("\n*** " + player + " has 21 and wins! ***");
+                return true;
+            }
+
+            playTurn(player);
+
+            if (blackjackGame.checkWinCondition()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public void playTurn(Player player) {
         System.out.println("\n--- " + player + " turn ---");
@@ -126,7 +158,7 @@ public class RoundLogic {
                 if (player.isBusted()) {
                     System.out.println(player + " is over " + HIGHEST_SCORE + " and busted!");
                     player.setOut(true);
-                } else if (player.hasBlackjack()) {
+                } else if (player.hasHighScore()) {
                     System.out.println(player + " has exactly " + HIGHEST_SCORE + "!");
                 }
             } else {
@@ -134,5 +166,13 @@ public class RoundLogic {
                 player.setStanding(true);
             }
         }
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 }
