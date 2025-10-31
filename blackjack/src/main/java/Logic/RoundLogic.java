@@ -26,7 +26,7 @@ public class RoundLogic {
         this.scanner = new Scanner(System.in);
     }
 
-    public void setupPlayers() {
+    public void createPlayers(){
         int numPlayers;
         do {
             System.out.print("How many players want to play?: ");
@@ -38,7 +38,10 @@ public class RoundLogic {
                         + MAX_PLAYERS + " of players need to participate!");
             }
         } while (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS);
+        setPlayerNames(numPlayers);
+    }
 
+    public void setPlayerNames(int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
             System.out.print("Please enter name of player " + (i + 1) + ": ");
             String name = scanner.nextLine();

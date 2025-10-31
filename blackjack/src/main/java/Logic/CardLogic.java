@@ -21,9 +21,13 @@ public class CardLogic {
         this.random = new Random();
     }
 
-    public void fillDeck() {
+    public void createDeck() {
         System.out.print("How many decks should be used this round?: ");
         int numDecks = scanner.nextInt();
+        fillDeck(numDecks);
+    }
+
+    public void fillDeck(int numDecks) {
         String[] suits = {"♠", "♥", "♦", "♣"};
 
         for (int i = 0; i < numDecks; i++) {
@@ -39,6 +43,7 @@ public class CardLogic {
             }
         }
     }
+
 
     public Card drawCard() {
         if (deck.isEmpty()) {
