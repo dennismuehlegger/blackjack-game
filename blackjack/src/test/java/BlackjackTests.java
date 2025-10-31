@@ -16,6 +16,64 @@ import static org.junit.Assert.*;
 public class BlackjackTests {
 
     @Test
+    public void testPlayerLimit() {
+        List<Card> deck = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
+
+        CardLogic cardLogic = new CardLogic(deck, players);
+        cardLogic.setRandom(createDeterministicRandom());
+
+        String input = "8\n2\ndennis\nlejla\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+
+        roundLogic.createPlayers();
+
+        assertEquals("2 players should exist",2, players.size());
+        assertEquals("player dennis should exist","dennis", players.get(0).getName());
+        assertEquals("player lejla should exist","lejla", players.get(1).getName());
+
+        System.setIn(System.in);
+    }
+
+    @Test
+    public void testDeckCreation() {
+        List<Player> players = new ArrayList<>();
+        CardLogic cardLogic = new CardLogic(new ArrayList<>(), players);
+
+        String input = "2\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        cardLogic.fillDeck(2);
+        assertEquals("2 decks should have 104 cards", 104, cardLogic.getDeck().size());
+
+        System.setIn(System.in);
+    }
+
+    @Test
+    public void testAceCalculation() {
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(11, "♠", "A"));
+        dennis.addCard(new Card(5, "♥", "5"));
+
+        assertEquals("Ace should be 11 when safe", 16, dennis.getHandValue());
+        assertFalse(dennis.isBusted());
+    }
+
+    @Test
+    public void testAceCalculationPotentialBust() {
+        Player dennis = new Player("dennis");
+        dennis.addCard(new Card(10, "♦", "10"));
+        dennis.addCard(new Card(10, "♣", "K"));
+        dennis.addCard(new Card(11, "♠", "A"));
+
+        assertEquals("Ace should be 1 to avoid bust", 21, dennis.getHandValue());
+        assertFalse(dennis.isBusted());
+    }
+
+    @Test
     public void testInputRoundLogicPlayerBusts() {
         List<Card> deck = new ArrayList<>();
         deck.add(new Card(6, "♥", "6"));
@@ -43,10 +101,10 @@ public class BlackjackTests {
         roundLogic.playTurn(dennis);
         roundLogic.playTurn(lejla);
 
-        assertEquals(22, dennis.getHandValue());
-        assertTrue(dennis.isBusted());
-        assertEquals(20, lejla.getHandValue());
-        assertFalse(lejla.isBusted());
+        assertEquals("player dennis should have 22 points",22, dennis.getHandValue());
+        assertTrue("player dennis should bust", dennis.isBusted());
+        assertEquals("player lejla should have 20 points",20, lejla.getHandValue());
+        assertFalse("player lejla should not bust", lejla.isBusted());
 
         System.setIn(System.in);
     }
@@ -78,10 +136,10 @@ public class BlackjackTests {
         roundLogic.playTurn(dennis);
         roundLogic.playTurn(lejla);
 
-        assertEquals(15, dennis.getHandValue());
-        assertTrue(dennis.isStanding());
-        assertEquals(16, lejla.getHandValue());
-        assertFalse(lejla.isStanding());
+        assertEquals("player dennis should have 15 points", 15, dennis.getHandValue());
+        assertTrue("player dennis should stand", dennis.isStanding());
+        assertEquals("player lejla should have 16 points", 16, lejla.getHandValue());
+        assertFalse("player lejla should not stand", lejla.isStanding());
 
         System.setIn(System.in);
     }
@@ -114,8 +172,8 @@ public class BlackjackTests {
         roundLogic.playTurn(dennis);
         roundLogic.playTurn(lejla);
 
-        assertEquals(21, dennis.getHandValue());
-        assertEquals(20, lejla.getHandValue());
+        assertEquals("player dennis should win with 21 points", 21, dennis.getHandValue());
+        assertEquals("player lejla should not win with 20 points", 20, lejla.getHandValue());
 
         System.setIn(System.in);
     }
@@ -143,8 +201,8 @@ public class BlackjackTests {
 
         roundLogic.playRounds();
 
-        assertTrue(dennis.isBusted());
-        assertTrue(lejla.isBusted());
+        assertTrue("player dennis should bust", dennis.isBusted());
+        assertTrue("player lejla should bust", lejla.isBusted());
 
         System.setIn(System.in);
     }
@@ -169,12 +227,12 @@ public class BlackjackTests {
 
         roundLogic.playRounds();
 
-        assertEquals(21, dennis.getHandValue());
-        assertEquals(19, lejla.getHandValue());
+        assertEquals("player dennis should have 21 points", 21, dennis.getHandValue());
+        assertEquals("player lejla should have 19 points", 19, lejla.getHandValue());
     }
 
     @Test
-    public void testPlayRoundsImmediateHighScoreTie() {
+    public void testPlayRoundsHighScoreTie() {
         List<Card> deck = new ArrayList<>();
 
         Player dennis = new Player("dennis");
@@ -193,8 +251,8 @@ public class BlackjackTests {
 
         roundLogic.playRounds();
 
-        assertEquals(21, dennis.getHandValue());
-        assertEquals(21, lejla.getHandValue());
+        assertEquals("player dennis should have 21 points",21, dennis.getHandValue());
+        assertEquals("player lejla should have 21 points",21, lejla.getHandValue());
     }
 
     //todo these need to be fixed
@@ -214,7 +272,8 @@ public class BlackjackTests {
         CardLogic cardLogic = new CardLogic(deck, players);
 
         String input = "no\nno\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
 
         BlackjackGame blackjackGame = new BlackjackGame();
         RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);

@@ -106,8 +106,8 @@ public class BlackjackGame {
     public void setup() throws InterruptedException {
         CardLogic cardLogic = new CardLogic(this.deck, this.players);
         RoundLogic roundLogic = new RoundLogic(cardLogic, this, this.players);
-        cardLogic.fillDeck();
-        roundLogic.setupPlayers();
+        cardLogic.createDeck();
+        roundLogic.createPlayers();
         cardLogic.dealInitialCards();
         roundLogic.playRounds();
     }
