@@ -29,7 +29,7 @@ A console-based Blackjack game with the objective of getting 21 points.
 - Maven 3.6+
 
 ## Testing
-The project includes **12 comprehensive tests** covering:
+The project includes **15 comprehensive tests** covering:
 - Player limit validation
 - Deck creation and shuffling
 - Ace calculation (11 vs 1)
