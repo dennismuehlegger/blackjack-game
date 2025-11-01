@@ -21,7 +21,7 @@ A console-based Blackjack game with the objective of getting 21 points.
 
 ## Technologies
 - **Java 21** - Core language
-- **JUnit 5** - Unit and integration testing
+- **JUnit 4** - Unit and integration testing
 - **Maven** - Build and dependency management
 
 ### Prerequisites
