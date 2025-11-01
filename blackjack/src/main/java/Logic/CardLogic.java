@@ -1,29 +1,51 @@
 package main.java.Logic;
 
+import main.java.Game.BlackjackGame;
 import main.java.Game.Card;
 import main.java.Game.Player;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class CardLogic {
-
+    private static final int MIN_DECK = 1;
+    private static final int MAX_DECK = 8;
     private List<Card> deck;
     private List<Player> players;
     private Scanner scanner;
     private Random random;
 
     public CardLogic(List<Card> deck, List<Player> players) {
+        this(deck, players, new Scanner(System.in));
+    }
+
+    public CardLogic(List<Card> deck, List<Player> players, Scanner scanner) {
         this.deck = deck;
         this.players = players;
-        this.scanner = new Scanner(System.in);
+        this.scanner = scanner;
         this.random = new Random();
     }
 
     public void createDeck() {
-        System.out.print("How many decks should be used this round?: ");
-        int numDecks = scanner.nextInt();
+        int numDecks;
+        do {
+            System.out.print("How many decks should be used this round?: ");
+            try {
+                numDecks = scanner.nextInt();
+
+                if (numDecks < MIN_DECK || numDecks > MAX_DECK) {
+                    System.out.println("At least " + MIN_DECK + " or maximum " + MAX_DECK + " of decks can be used!");
+
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a number!");
+                scanner.next();
+                numDecks = 0;
+            }
+        } while (numDecks < MIN_DECK || numDecks > MAX_DECK);
+
         fillDeck(numDecks);
     }
 
@@ -46,9 +68,6 @@ public class CardLogic {
 
 
     public Card drawCard() {
-        if (deck.isEmpty()) {
-            throw new IllegalStateException("Deck is empty!");
-        }
         int index = random.nextInt(deck.size());
         return deck.remove(index);
     }
@@ -81,11 +100,9 @@ public class CardLogic {
         for (Player player : players) {
             if (player.isOut()) {
                 System.out.printf("%s: %d (Busted)%n", player.getName(), player.getHandValue());
-            }
-            else if (player.isStanding()){
+            } else if (player.isStanding()) {
                 System.out.printf("%s: %d (Standing)%n", player.getName(), player.getHandValue());
-            }
-            else {
+            } else {
                 System.out.printf("%s: %d%n", player.getName(), player.getHandValue());
             }
         }

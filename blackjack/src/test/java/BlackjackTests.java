@@ -24,32 +24,81 @@ public class BlackjackTests {
         cardLogic.setRandom(createDeterministicRandom());
 
         String input = "8\n2\ndennis\nlejla\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
 
         BlackjackGame blackjackGame = new BlackjackGame();
-        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players, scanner);
 
         roundLogic.createPlayers();
 
-        assertEquals("2 players should exist",2, players.size());
-        assertEquals("player dennis should exist","dennis", players.get(0).getName());
-        assertEquals("player lejla should exist","lejla", players.get(1).getName());
+        assertEquals("2 players should exist", 2, players.size());
+        assertEquals("player dennis should exist", "dennis", players.get(0).getName());
+        assertEquals("player lejla should exist", "lejla", players.get(1).getName());
+    }
 
-        System.setIn(System.in);
+    @Test
+    public void testPlayerInputMismatch() {
+        List<Card> deck = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
+
+        CardLogic cardLogic = new CardLogic(deck, players);
+        cardLogic.setRandom(createDeterministicRandom());
+
+        String input = "f\n2\ndennis\nlejla\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+
+        BlackjackGame blackjackGame = new BlackjackGame();
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players, scanner);
+
+        roundLogic.createPlayers();
+
+        assertEquals("2 players should exist", 2, players.size());
+        assertEquals("player dennis should exist", "dennis", players.get(0).getName());
+        assertEquals("player lejla should exist", "lejla", players.get(1).getName());
+    }
+
+    @Test
+    public void testDeckLimit() {
+        List<Card> deck = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
+
+        String input = "9\n2\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+
+        CardLogic cardLogic = new CardLogic(deck, players, scanner);
+        cardLogic.setRandom(createDeterministicRandom());
+
+        cardLogic.createDeck();
+
+        assertNotEquals("deck size should not be 468", 468, deck.size());
+        assertEquals("deck size should be 104", 104, deck.size());
+    }
+
+    @Test
+    public void testDeckInputMismatch() {
+        List<Card> deck = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
+
+        String input = "d\n2\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+
+        CardLogic cardLogic = new CardLogic(deck, players, scanner);
+        cardLogic.setRandom(createDeterministicRandom());
+
+        cardLogic.createDeck();
+        assertEquals("deck size should be 104", 104, deck.size());
     }
 
     @Test
     public void testDeckCreation() {
         List<Player> players = new ArrayList<>();
-        CardLogic cardLogic = new CardLogic(new ArrayList<>(), players);
 
         String input = "2\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
+        CardLogic cardLogic = new CardLogic(new ArrayList<>(), players, scanner);
 
         cardLogic.fillDeck(2);
         assertEquals("2 decks should have 104 cards", 104, cardLogic.getDeck().size());
-
-        System.setIn(System.in);
     }
 
     @Test
@@ -93,20 +142,18 @@ public class BlackjackTests {
         cardLogic.setRandom(createDeterministicRandom());
 
         String input = "yes\nyes\nyes\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
 
         BlackjackGame blackjackGame = new BlackjackGame();
-        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players, scanner);
 
         roundLogic.playTurn(dennis);
         roundLogic.playTurn(lejla);
 
-        assertEquals("player dennis should have 22 points",22, dennis.getHandValue());
+        assertEquals("player dennis should have 22 points", 22, dennis.getHandValue());
         assertTrue("player dennis should bust", dennis.isBusted());
-        assertEquals("player lejla should have 20 points",20, lejla.getHandValue());
+        assertEquals("player lejla should have 20 points", 20, lejla.getHandValue());
         assertFalse("player lejla should not bust", lejla.isBusted());
-
-        System.setIn(System.in);
     }
 
     @Test
@@ -128,10 +175,10 @@ public class BlackjackTests {
         cardLogic.setRandom(createDeterministicRandom());
 
         String input = "no\nyes\nyes\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
 
         BlackjackGame blackjackGame = new BlackjackGame();
-        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players, scanner);
 
         roundLogic.playTurn(dennis);
         roundLogic.playTurn(lejla);
@@ -140,8 +187,6 @@ public class BlackjackTests {
         assertTrue("player dennis should stand", dennis.isStanding());
         assertEquals("player lejla should have 16 points", 16, lejla.getHandValue());
         assertFalse("player lejla should not stand", lejla.isStanding());
-
-        System.setIn(System.in);
     }
 
     @Test
@@ -164,18 +209,16 @@ public class BlackjackTests {
         cardLogic.setRandom(createDeterministicRandom());
 
         String input = "yes\nyes\nyes\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
 
         BlackjackGame blackjackGame = new BlackjackGame();
-        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players, scanner);
 
         roundLogic.playTurn(dennis);
         roundLogic.playTurn(lejla);
 
         assertEquals("player dennis should win with 21 points", 21, dennis.getHandValue());
         assertEquals("player lejla should not win with 20 points", 20, lejla.getHandValue());
-
-        System.setIn(System.in);
     }
 
     @Test
@@ -203,8 +246,6 @@ public class BlackjackTests {
 
         assertTrue("player dennis should bust", dennis.isBusted());
         assertTrue("player lejla should bust", lejla.isBusted());
-
-        System.setIn(System.in);
     }
 
     @Test
@@ -251,13 +292,12 @@ public class BlackjackTests {
 
         roundLogic.playRounds();
 
-        assertEquals("player dennis should have 21 points",21, dennis.getHandValue());
-        assertEquals("player lejla should have 21 points",21, lejla.getHandValue());
+        assertEquals("player dennis should have 21 points", 21, dennis.getHandValue());
+        assertEquals("player lejla should have 21 points", 21, lejla.getHandValue());
     }
 
-    //todo these need to be fixed
-    /*@Test
-    public void testPlayRoundsAllPlayersStand() {
+    @Test
+    public void testInputPlayRoundsAllPlayersStand() {
         List<Card> deck = new ArrayList<>();
 
         Player dennis = new Player("dennis");
@@ -272,11 +312,10 @@ public class BlackjackTests {
         CardLogic cardLogic = new CardLogic(deck, players);
 
         String input = "no\nno\n";
-        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
 
-        BlackjackGame blackjackGame = new BlackjackGame();
-        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+        BlackjackGame blackjackGame = new BlackjackGame(deck, players);
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players, scanner);
 
         roundLogic.playRounds();
 
@@ -284,14 +323,16 @@ public class BlackjackTests {
         assertTrue(lejla.isStanding());
         assertEquals(19, dennis.getHandValue());
         assertEquals(18, lejla.getHandValue());
-
-        System.setIn(System.in);
     }
 
     @Test
-    public void testPlayRoundsSkipsBustedAndStandingPlayers() {
+    public void testInputPlayRoundsSkipsBustedAndStandingPlayers() {
         List<Card> deck = new ArrayList<>();
         deck.add(new Card(10, "♥", "K"));
+        deck.add(new Card(2, "♥", "2"));
+        deck.add(new Card(3, "♥", "3"));
+        deck.add(new Card(4, "♥", "4"));
+        deck.add(new Card(5, "♥", "5"));
 
         Player dennis = new Player("dennis");
         dennis.addCard(new Card(10, "♦", "10"));
@@ -301,23 +342,36 @@ public class BlackjackTests {
         lejla.addCard(new Card(10, "♥", "10"));
         lejla.addCard(new Card(9, "♠", "9"));
 
-        List<Player> players = Arrays.asList(dennis, lejla);
+        Player ethan = new Player("ethan");
+        ethan.addCard(new Card(6, "♥", "6"));
+        ethan.addCard(new Card(9, "♠", "9"));
+
+        Player ellis = new Player("ellis");
+        ellis.addCard(new Card(2, "♥", "2"));
+        ellis.addCard(new Card(7, "♠", "7"));
+
+        List<Player> players = Arrays.asList(dennis, lejla, ethan, ellis);
         CardLogic cardLogic = new CardLogic(deck, players);
         cardLogic.setRandom(createDeterministicRandom());
 
-        String input = "yes\nno\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        // Input sequence: dennis draws a card and busts, lejla stands,
+        // ethan draws 2 and gets to 17 points, ellis draws 3 and gets to 12 points,
+        // ethan draws 4 and gets to 21 points, ellis draws 5 and gets to 17 points
+        String input = "yes\nno\nyes\nyes\nyes\nyes\n";
+        Scanner scanner = new Scanner(new ByteArrayInputStream(input.getBytes()));
 
-        BlackjackGame blackjackGame = new BlackjackGame();
-        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players);
+        BlackjackGame blackjackGame = new BlackjackGame(deck, players);
+        RoundLogic roundLogic = new RoundLogic(cardLogic, blackjackGame, players, scanner);
 
         roundLogic.playRounds();
 
-        assertTrue(dennis.isBusted());
-        assertTrue(lejla.isStanding());
-
-        System.setIn(System.in);
-    }*/
+        assertTrue("player dennis should be busted", dennis.isBusted());
+        assertTrue("player lejla should be standing", lejla.isStanding());
+        assertEquals("player dennis should have 28 points", 28, dennis.getHandValue());
+        assertEquals("player lejla should have 19 points",19, lejla.getHandValue());
+        assertEquals("player ethan should have 21 points",21, ethan.getHandValue());
+        assertEquals("player ellis should have 17 points",17, ellis.getHandValue());
+    }
 
 
     private Random createDeterministicRandom() {

@@ -22,6 +22,13 @@ public class BlackjackGame {
         this.random = new Random();
     }
 
+    public BlackjackGame(List<Card> deck, List<Player> players) {
+        this.deck = deck;
+        this.players = players;
+        this.scanner = new Scanner(System.in);
+        this.random = new Random();
+    }
+
     public boolean checkWinCondition() {
         List<Player> activePlayers = new ArrayList<>();
 

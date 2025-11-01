@@ -5,6 +5,7 @@ import main.java.Game.Card;
 import main.java.Game.Player;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,23 +20,32 @@ public class RoundLogic {
     private List<Player> players;
     private Scanner scanner;
 
-    public RoundLogic(CardLogic cardLogic, BlackjackGame blackjackGame, List<Player> players) {
+    public RoundLogic(CardLogic cardLogic, BlackjackGame game, List<Player> players) {
+        this(cardLogic, game, players, new Scanner(System.in));
+    }
+
+    public RoundLogic(CardLogic cardLogic, BlackjackGame game, List<Player> players, Scanner scanner) {
         this.cardLogic = cardLogic;
-        this.blackjackGame = blackjackGame;
+        this.blackjackGame = game;
         this.players = players;
-        this.scanner = new Scanner(System.in);
+        this.scanner = scanner;
     }
 
     public void createPlayers(){
         int numPlayers;
         do {
-            System.out.print("How many players want to play?: ");
-            numPlayers = scanner.nextInt();
-            scanner.nextLine();
+            try {
+                System.out.print("How many players want to play?: ");
+                numPlayers = scanner.nextInt();
+                scanner.nextLine();
 
-            if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
-                System.out.println("At least " + MIN_PLAYERS + " or maximum "
-                        + MAX_PLAYERS + " of players need to participate!");
+                if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
+                    System.out.println("At least " + MIN_PLAYERS + " or maximum " + MAX_PLAYERS + " of players need to participate!");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a number!");
+                scanner.next();
+                numPlayers = 0;
             }
         } while (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS);
         setPlayerNames(numPlayers);
@@ -59,13 +69,14 @@ public class RoundLogic {
             printRoundHeader(round);
             cardLogic.showAllHands();
 
+            if (processPlayerTurns()) {
+                return;
+            }
+
             if (blackjackGame.checkWinCondition()) {
                 return;
             }
 
-            if (processPlayerTurns()) {
-                return;
-            }
         }
 
         blackjackGame.determineWinner();
