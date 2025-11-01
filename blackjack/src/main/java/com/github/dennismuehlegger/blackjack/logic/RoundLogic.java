@@ -3,12 +3,14 @@ package com.github.dennismuehlegger.blackjack.logic;
 import com.github.dennismuehlegger.blackjack.game.BlackjackGame;
 import com.github.dennismuehlegger.blackjack.game.Card;
 import com.github.dennismuehlegger.blackjack.game.Player;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class RoundLogic {
+    private static final int SEPARATOR_LENGTH = 40;
     private static final int MIN_PLAYERS = 2;
     private static final int MAX_PLAYERS = 7;
     private static final int HIGHEST_SCORE = 21;
@@ -30,7 +32,7 @@ public class RoundLogic {
         this.scanner = scanner;
     }
 
-    public void createPlayers(){
+    public void createPlayers() {
         int numPlayers;
         do {
             try {
@@ -50,7 +52,7 @@ public class RoundLogic {
         setPlayerNames(numPlayers);
     }
 
-    public void setPlayerNames(int numPlayers) {
+    private void setPlayerNames(int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
             System.out.print("Please enter name of player " + (i + 1) + ": ");
             String name = scanner.nextLine();
@@ -72,13 +74,13 @@ public class RoundLogic {
                 return;
             }
 
-            if (blackjackGame.checkWinCondition()) {
+            if (checkWinCondition()) {
                 return;
             }
 
         }
 
-        blackjackGame.determineWinner();
+        determineWinner();
     }
 
     private boolean handleInitialHighScore() {
@@ -88,7 +90,7 @@ public class RoundLogic {
             return false;
         }
 
-        blackjackGame.showFinalHands();
+        showFinalHands();
         System.out.println("\n" + "=".repeat(40));
 
         if (highScorePlayers.size() == 1) {
@@ -97,36 +99,14 @@ public class RoundLogic {
             printTieMessage(highScorePlayers);
         }
 
-        System.out.println("=".repeat(BlackjackGame.SEPARATOR_LENGTH));
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
         return true;
     }
 
-    private List<Player> getPlayersWithHighScore() {
-        List<Player> highScorePlayers = new ArrayList<>();
-        for (Player player : players) {
-            if (player.getHandValue() == HIGHEST_SCORE) {
-                highScorePlayers.add(player);
-            }
-        }
-        return highScorePlayers;
-    }
-
-    private void printTieMessage(List<Player> highScorePlayers) {
-        System.out.println("*** TIE! ***");
-        System.out.print("Players with 21: ");
-        for (int i = 0; i < highScorePlayers.size(); i++) {
-            System.out.print(highScorePlayers.get(i));
-            if (i < highScorePlayers.size() - 1) {
-                System.out.print(", ");
-            }
-        }
-        System.out.println();
-    }
-
     private void printRoundHeader(int round) {
-        System.out.println("\n" + "=".repeat(BlackjackGame.SEPARATOR_LENGTH));
+        System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
         System.out.println("*** ROUND " + round + " ***");
-        System.out.println("=".repeat(BlackjackGame.SEPARATOR_LENGTH));
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
     }
 
     private boolean processPlayerTurns() {
@@ -136,14 +116,14 @@ public class RoundLogic {
             }
 
             if (player.hasHighScore()) {
-                blackjackGame.showFinalHands();
+                showFinalHands();
                 System.out.println("\n*** " + player + " has 21 and wins! ***");
                 return true;
             }
 
             playTurn(player);
 
-            if (blackjackGame.checkWinCondition()) {
+            if (checkWinCondition()) {
                 return true;
             }
         }
@@ -179,6 +159,109 @@ public class RoundLogic {
                 player.setStanding(true);
             }
         }
+    }
+
+    private boolean checkWinCondition() {
+        List<Player> activePlayers = new ArrayList<>();
+
+        for (Player player : players) {
+            if (!player.isOut()) {
+                activePlayers.add(player);
+            }
+        }
+
+        if (activePlayers.size() == 1) {
+            showFinalHands();
+            System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
+            System.out.println("*** " + activePlayers.get(0) + " wins! ***");
+            System.out.println("Hand: " + activePlayers.get(0).getHandValue());
+            System.out.println("=".repeat(SEPARATOR_LENGTH));
+            return true;
+        }
+
+        if (activePlayers.isEmpty()) {
+            showFinalHands();
+            System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
+            System.out.println("All players busted. Nobody wins!");
+            System.out.println("=".repeat(SEPARATOR_LENGTH));
+            return true;
+        }
+
+        boolean allStanding = activePlayers.stream().allMatch(Player::isStanding);
+        if (allStanding) {
+            determineWinner();
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private void determineWinner() {
+        showFinalHands();
+        Player winner = null;
+        int highestValue = 0;
+
+        for (Player player : players) {
+            if (!player.isOut() && player.getHandValue() > highestValue) {
+                highestValue = player.getHandValue();
+                winner = player;
+            }
+        }
+
+        if (winner != null) {
+            System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
+            System.out.println("*** " + winner + " wins with " + highestValue + " points! ***");
+            System.out.println("=".repeat(SEPARATOR_LENGTH));
+        } else {
+            System.out.println("\nNo winners - all players busted!");
+        }
+    }
+
+    private List<Player> getPlayersWithHighScore() {
+        List<Player> highScorePlayers = new ArrayList<>();
+        for (Player player : players) {
+            if (player.getHandValue() == HIGHEST_SCORE) {
+                highScorePlayers.add(player);
+            }
+        }
+        return highScorePlayers;
+    }
+
+    private void printTieMessage(List<Player> highScorePlayers) {
+        System.out.println("*** TIE! ***");
+        System.out.print("Players with 21: ");
+        for (int i = 0; i < highScorePlayers.size(); i++) {
+            System.out.print(highScorePlayers.get(i));
+            if (i < highScorePlayers.size() - 1) {
+                System.out.print(", ");
+            }
+        }
+        System.out.println();
+    }
+
+    private void showFinalHands() {
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
+        System.out.println("*** FINAL HANDS ***");
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
+
+        for (Player player : players) {
+            String status = "";
+            if (player.isOut()) {
+                status = " (Busted)";
+            } else if (player.isStanding()) {
+                status = " (Standing)";
+            }
+
+            System.out.printf("%s: %s = %d%s%n",
+                    player.getName(),
+                    player.getFullHand(),
+                    player.getHandValue(),
+                    status
+            );
+        }
+
+        System.out.println("=".repeat(SEPARATOR_LENGTH));
     }
 
     public List<Player> getPlayers() {
