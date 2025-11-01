@@ -1,24 +1,50 @@
-# blackjack-game
-A console-based Blackjack adjacent game with the objective getting to 21 points.
+# Blackjack Game
 
-## features and rules
-- **multi-deck support**: configure number of decks used
-- **multi-player**: configurable amount of players (up to 7 players without a dealer)
-- **initial deal**: players get two initial cards when round begins
-- **player actions**:
-- hit: draw another card
-- stand: keep current hand and stop drawing
-- **win conditions**:
-- player closest to 21 points wins
-- player with exactly 21 points wins automatically
-- player going over 21 busts (loses)
-- **ace handling**: ace card is calculated as 11 points or 1 point (depending on if player were to bust)
-- **edge case handling**: ties, all players busting, etc.
-- **no betting**: purely a score based game
+A console-based Blackjack game with the objective of getting 21 points.
 
-## technologies
-- Java
-- Junit
+## Features
 
-## testing
-edit later
+### Core Gameplay
+- **Multi-deck support**: Configurable number of decks per round
+- **Multi-player mode**: Support for 2-7 players (no dealer)
+- **Initial deal**: Each player receives two cards to start
+- **Player actions**:
+  - `Hit`: Draw another card
+  - `Stand`: Keep current hand until round is over
+- **Ace handling**: Aces count as 11 or 1 to prevent busting
+- **Automatic win detection**: Players reaching exactly 21 win immediately
+
+### Win Conditions
+- Player closest to 21 without busting wins
+- Ties are handled (multiple players can reach 21)
+- All players busting results in no winner
+
+## Technologies
+- **Java 21** - Core language
+- **JUnit 5** - Unit and integration testing
+- **Maven** - Build and dependency management
+
+### Prerequisites
+- Java 21 or higher
+- Maven 3.6+
+
+## Testing
+The project includes **15 comprehensive tests** covering:
+- Player limit validation
+- Deck creation and shuffling
+- Ace calculation (11 vs 1)
+- Busting scenarios
+- Standing behavior
+- Win condition detection
+- etc...
+
+## How to Play
+
+1. Specify number of decks (1-8)
+2. Enter number of players (2-7)
+3. Enter player names
+4. Each player's turn:
+   - View current hand and score
+   - Choose to `hit` (draw) or `stand` (keep)
+   - Bust if score exceeds 21
+5. Winner(s) announced at end of round
