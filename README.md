@@ -2,6 +2,15 @@
 
 A console-based Blackjack game with the objective of getting 21 points.
 
+## Installation & Running
+
+```bash
+# Clone and build
+git clone https://github.com/dennismuehlegger/blackjack-game.git
+cd blackjack-game
+mvn clean install
+```
+
 ## Features
 
 ### Core Gameplay
