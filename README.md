@@ -1,6 +1,6 @@
 # Blackjack Game
 
-A console-based Blackjack game with the objective of getting 21 points.
+A console-based Blackjack adjacent game with the objective of getting 21 points.
 
 ## Installation & Running
 
