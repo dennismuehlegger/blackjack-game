@@ -51,6 +51,7 @@ The project includes **16 comprehensive tests** covering:
 
 ## Example Round
 
+```
 --- First deal ---
 player 1 gets: 4♠
 player 2 gets: K♣
@@ -68,7 +69,6 @@ player 1: 6
 player 2: 12
 player 3: 18
 
-
 ========================================
 *** ROUND 1 ***
 ========================================
@@ -77,7 +77,6 @@ player 3: 18
 player 1: 6
 player 2: 12
 player 3: 18
-
 
 --- player 1 turn ---
 Current hand: 6
@@ -107,7 +106,6 @@ player 1: 13
 player 2: 15
 player 3: 18 (Standing)
 
-
 --- player 1 turn ---
 Current hand: 13
 player 1, do you want to hit? (yes/no): yes
@@ -132,11 +130,11 @@ player 1: 23 (Busted)
 player 2: 19
 player 3: 18 (Standing)
 
-
 --- player 2 turn ---
 Current hand: 19
 player 2, do you want to hit? (yes/no): no
 player 2 stands (hand stays 19)
+
 ========================================
 *** FINAL HANDS ***
 ========================================
@@ -144,6 +142,9 @@ player 1: 4♠, 2♥, 7♥, 10♦ = 23 (Busted)
 player 2: K♣, 2♦, 3♠, 4♥ = 19 (Standing)
 player 3: J♦, 8♠ = 18 (Standing)
 ========================================
+
 ========================================
 *** player 2 wins with 19 points! ***
 ========================================
+```
+```
