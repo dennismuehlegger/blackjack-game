@@ -3,6 +3,7 @@ package com.github.dennismuehlegger.blackjack.logic;
 import com.github.dennismuehlegger.blackjack.game.BlackjackGame;
 import com.github.dennismuehlegger.blackjack.game.Card;
 import com.github.dennismuehlegger.blackjack.game.Player;
+import com.github.dennismuehlegger.blackjack.game.Winner;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -16,10 +17,10 @@ public class RoundLogic {
     private static final int HIGHEST_SCORE = 21;
     private static final int MAX_ROUNDS = 5;
 
-    private CardLogic cardLogic;
-    private BlackjackGame blackjackGame;
-    private List<Player> players;
-    private Scanner scanner;
+    private final CardLogic cardLogic;
+    private final BlackjackGame blackjackGame;
+    private final List<Player> players;
+    private final Scanner scanner;
 
     public RoundLogic(CardLogic cardLogic, BlackjackGame game, List<Player> players) {
         this(cardLogic, game, players, new Scanner(System.in));
@@ -33,6 +34,11 @@ public class RoundLogic {
     }
 
     public void createPlayers() {
+        int numPlayers = promptForNumberOfPlayers();
+        setPlayerNames(numPlayers);
+    }
+
+    private int promptForNumberOfPlayers() {
         int numPlayers;
         do {
             try {
@@ -40,7 +46,7 @@ public class RoundLogic {
                 numPlayers = scanner.nextInt();
                 scanner.nextLine();
 
-                if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
+                if (isInvalidPlayerCount(numPlayers)) {
                     System.out.println("At least " + MIN_PLAYERS + " or maximum " + MAX_PLAYERS + " of players need to participate!");
                 }
             } catch (InputMismatchException e) {
@@ -48,8 +54,12 @@ public class RoundLogic {
                 scanner.next();
                 numPlayers = 0;
             }
-        } while (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS);
-        setPlayerNames(numPlayers);
+        } while (isInvalidPlayerCount(numPlayers));
+        return numPlayers;
+    }
+
+    private boolean isInvalidPlayerCount(int count) {
+        return count < MIN_PLAYERS || count > MAX_PLAYERS;
     }
 
     private void setPlayerNames(int numPlayers) {
@@ -70,14 +80,9 @@ public class RoundLogic {
             printRoundHeader(round);
             cardLogic.showAllHands();
 
-            if (processPlayerTurns()) {
+            if (processPlayerTurns() || checkWinCondition()) {
                 return;
             }
-
-            if (checkWinCondition()) {
-                return;
-            }
-
         }
 
         determineWinner();
@@ -90,16 +95,7 @@ public class RoundLogic {
             return false;
         }
 
-        showFinalHands();
-        System.out.println("\n" + "=".repeat(40));
-
-        if (highScorePlayers.size() == 1) {
-            System.out.println("*** " + highScorePlayers.get(0) + " has 21 and wins! ***");
-        } else {
-            printTieMessage(highScorePlayers);
-        }
-
-        System.out.println("=".repeat(SEPARATOR_LENGTH));
+        announceWinner(highScorePlayers, HIGHEST_SCORE, true);
         return true;
     }
 
@@ -111,17 +107,14 @@ public class RoundLogic {
 
     private boolean processPlayerTurns() {
         for (Player player : players) {
-            if (player.isBusted() || player.isStanding()) {
+            if (shouldSkipPlayer(player)) {
                 continue;
             }
 
-            if (player.hasHighScore()) {
-                showFinalHands();
-                System.out.println("\n*** " + player + " has 21 and wins! ***");
+            if (playTurn(player)) {
+                determineWinner();
                 return true;
             }
-
-            playTurn(player);
 
             if (checkWinCondition()) {
                 return true;
@@ -130,65 +123,82 @@ public class RoundLogic {
         return false;
     }
 
+    private boolean shouldSkipPlayer(Player player) {
+        return player.isBusted() || player.isStanding();
+    }
 
-    public void playTurn(Player player) {
-        System.out.println("\n--- " + player + " turn ---");
-        System.out.println("Current hand: " + player.getHandValue());
+    public boolean playTurn(Player player) {
+        printTurnHeader(player);
 
-        String answer;
-        if (!player.isStanding()) {
-            do {
-                System.out.print(player + ", do you want to hit? (yes/no): ");
-                answer = scanner.nextLine().toLowerCase().trim();
-            } while (!answer.equals("yes") && !answer.equals("no"));
+        if (player.isStanding()) {
+            return false;
+        }
 
-            if (answer.equals("yes")) {
-                Card card = cardLogic.drawCard();
-                player.addCard(card);
-                System.out.println("\n" + player + " draws: " + card);
-                System.out.println("New hand: " + player.getHandValue());
+        String answer = promptHitOrStand(player);
 
-                if (player.isBusted()) {
-                    System.out.println(player + " is over " + HIGHEST_SCORE + " and busted!");
-                    player.setOut(true);
-                } else if (player.hasHighScore()) {
-                    System.out.println(player + " has exactly " + HIGHEST_SCORE + "!");
-                }
-            } else {
-                System.out.println(player + " stands (hand stays " + player.getHandValue() + ")");
-                player.setStanding(true);
-            }
+        if (answer.equals("yes")) {
+            return handleHit(player);
+        } else {
+            handleStand(player);
+            return false;
         }
     }
 
-    private boolean checkWinCondition() {
-        List<Player> activePlayers = new ArrayList<>();
+    private void printTurnHeader(Player player) {
+        System.out.println("\n--- " + player + " turn ---");
+        System.out.println("Current hand: " + player.getHandValue());
+    }
 
-        for (Player player : players) {
-            if (!player.isOut()) {
-                activePlayers.add(player);
-            }
+    private String promptHitOrStand(Player player) {
+        String answer;
+        do {
+            System.out.print(player + ", do you want to hit? (yes/no): ");
+            answer = scanner.nextLine().toLowerCase().trim();
+        } while (!answer.equals("yes") && !answer.equals("no"));
+        return answer;
+    }
+
+    private boolean handleHit(Player player) {
+        Card card = cardLogic.drawCard();
+        player.addCard(card);
+
+        System.out.println("\n" + player + " draws: " + card);
+        System.out.println("New hand: " + player.getHandValue());
+
+        if (player.isBusted()) {
+            handleBust(player);
+            return false;
+        } else if (player.hasHighScore()) {
+            System.out.println(player + " has exactly " + HIGHEST_SCORE + "!");
+            return true;
         }
+        return false;
+    }
+
+    private void handleBust(Player player) {
+        System.out.println(player + " is over " + HIGHEST_SCORE + " and busted!");
+        player.setOut(true);
+    }
+
+    private void handleStand(Player player) {
+        System.out.println(player + " stands (hand stays " + player.getHandValue() + ")");
+        player.setStanding(true);
+    }
+
+    private boolean checkWinCondition() {
+        List<Player> activePlayers = getActivePlayers();
 
         if (activePlayers.size() == 1) {
-            showFinalHands();
-            System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
-            System.out.println("*** " + activePlayers.get(0) + " wins! ***");
-            System.out.println("Hand: " + activePlayers.get(0).getHandValue());
-            System.out.println("=".repeat(SEPARATOR_LENGTH));
+            announceSingleWinner(activePlayers.get(0));
             return true;
         }
 
         if (activePlayers.isEmpty()) {
-            showFinalHands();
-            System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
-            System.out.println("All players busted. Nobody wins!");
-            System.out.println("=".repeat(SEPARATOR_LENGTH));
+            announceAllBusted();
             return true;
         }
 
-        boolean allStanding = activePlayers.stream().allMatch(Player::isStanding);
-        if (allStanding) {
+        if (allPlayersStanding(activePlayers)) {
             determineWinner();
             return true;
         }
@@ -196,26 +206,91 @@ public class RoundLogic {
         return false;
     }
 
+    private List<Player> getActivePlayers() {
+        List<Player> activePlayers = new ArrayList<>();
+        for (Player player : players) {
+            if (!player.isOut()) {
+                activePlayers.add(player);
+            }
+        }
+        return activePlayers;
+    }
+
+    private boolean allPlayersStanding(List<Player> activePlayers) {
+        return activePlayers.stream().allMatch(Player::isStanding);
+    }
+
+    private void announceSingleWinner(Player winner) {
+        showFinalHands();
+        printSeparator();
+        System.out.println("*** " + winner + " wins! ***");
+        System.out.println("Hand: " + winner.getHandValue());
+        printSeparator();
+    }
+
+    private void announceAllBusted() {
+        showFinalHands();
+        printSeparator();
+        System.out.println("All players busted. Nobody wins!");
+        printSeparator();
+    }
 
     private void determineWinner() {
         showFinalHands();
-        Player winner = null;
+
+        Winner result = findWinnersWithHighestScore();
+
+        printSeparator();
+        announceResult(result);
+        printSeparator();
+    }
+
+    private Winner findWinnersWithHighestScore() {
+        List<Player> winners = new ArrayList<>();
         int highestValue = 0;
 
         for (Player player : players) {
-            if (!player.isOut() && player.getHandValue() > highestValue) {
+            if (player.isOut()) {
+                continue;
+            }
+
+            if (player.getHandValue() > highestValue) {
                 highestValue = player.getHandValue();
-                winner = player;
+                winners.clear();
+                winners.add(player);
+            } else if (player.getHandValue() == highestValue) {
+                winners.add(player);
             }
         }
 
-        if (winner != null) {
-            System.out.println("\n" + "=".repeat(SEPARATOR_LENGTH));
-            System.out.println("*** " + winner + " wins with " + highestValue + " points! ***");
-            System.out.println("=".repeat(SEPARATOR_LENGTH));
+        return new Winner(winners, highestValue);
+    }
+
+    private void announceResult(Winner result) {
+        if (result.winners.isEmpty()) {
+            System.out.println("No winners - all players busted!");
+        } else if (result.winners.size() == 1) {
+            System.out.println("*** " + result.winners.get(0) + " wins with " + result.highestScore + " points! ***");
         } else {
-            System.out.println("\nNo winners - all players busted!");
+            printTieMessage(result.winners, result.highestScore);
         }
+    }
+
+    private void announceWinner(List<Player> winners, int score, boolean isHighScore) {
+        showFinalHands();
+        printSeparator();
+
+        if (winners.size() == 1) {
+            if (isHighScore) {
+                System.out.println("*** " + winners.get(0) + " has 21 and wins! ***");
+            } else {
+                System.out.println("*** " + winners.get(0) + " wins with " + score + " points! ***");
+            }
+        } else {
+            printTieMessage(winners, score);
+        }
+
+        printSeparator();
     }
 
     private List<Player> getPlayersWithHighScore() {
@@ -228,12 +303,13 @@ public class RoundLogic {
         return highScorePlayers;
     }
 
-    private void printTieMessage(List<Player> highScorePlayers) {
+    private void printTieMessage(List<Player> players, int score) {
         System.out.println("*** TIE! ***");
-        System.out.print("Players with 21: ");
-        for (int i = 0; i < highScorePlayers.size(); i++) {
-            System.out.print(highScorePlayers.get(i));
-            if (i < highScorePlayers.size() - 1) {
+        System.out.print("Players with " + score + ": ");
+
+        for (int i = 0; i < players.size(); i++) {
+            System.out.print(players.get(i));
+            if (i < players.size() - 1) {
                 System.out.print(", ");
             }
         }
@@ -241,26 +317,32 @@ public class RoundLogic {
     }
 
     private void showFinalHands() {
-        System.out.println("=".repeat(SEPARATOR_LENGTH));
+        printSeparator();
         System.out.println("*** FINAL HANDS ***");
-        System.out.println("=".repeat(SEPARATOR_LENGTH));
+        printSeparator();
 
         for (Player player : players) {
-            String status = "";
-            if (player.isOut()) {
-                status = " (Busted)";
-            } else if (player.isStanding()) {
-                status = " (Standing)";
-            }
-
             System.out.printf("%s: %s = %d%s%n",
                     player.getName(),
                     player.getFullHand(),
                     player.getHandValue(),
-                    status
+                    getPlayerStatus(player)
             );
         }
 
+        printSeparator();
+    }
+
+    private String getPlayerStatus(Player player) {
+        if (player.isOut()) {
+            return " (Busted)";
+        } else if (player.isStanding()) {
+            return " (Standing)";
+        }
+        return "";
+    }
+
+    private void printSeparator() {
         System.out.println("=".repeat(SEPARATOR_LENGTH));
     }
 
@@ -269,6 +351,8 @@ public class RoundLogic {
     }
 
     public void setPlayers(List<Player> players) {
-        this.players = players;
+        this.players.clear();
+        this.players.addAll(players);
     }
+
 }
