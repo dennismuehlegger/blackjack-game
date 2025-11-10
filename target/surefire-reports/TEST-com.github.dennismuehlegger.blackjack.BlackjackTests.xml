@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.096" tests="16" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.class.path" value="C:\Users\mhld\Desktop\blackjack-game\target\test-classes;C:\Users\mhld\Desktop\blackjack-game\target\classes;C:\Users\mhld\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\mhld\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="Europe/Berlin"/>
+    <property name="user.country.format" value="DE"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="C:\Users\mhld\AppData\Local\Programs\Eclipse Adoptium\jdk-21.0.6.7-hotspot\bin"/>
+    <property name="sun.java.command" value="C:\Users\mhld\AppData\Local\Temp\surefire10272336322674337421\surefirebooter-20251110121527837_3.jar C:\Users\mhld\AppData\Local\Temp\surefire10272336322674337421 2025-11-10T12-15-27_613-jvmRun1 surefire-20251110121527837_1tmp surefire_0-20251110121527837_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="C:\Users\mhld\Desktop\blackjack-game\target\test-classes;C:\Users\mhld\Desktop\blackjack-game\target\classes;C:\Users\mhld\.m2\repository\junit\junit\4.13.2\junit-4.13.2.jar;C:\Users\mhld\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\mhld"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-01-21"/>
+    <property name="java.home" value="C:\Users\mhld\AppData\Local\Programs\Eclipse Adoptium\jdk-21.0.6.7-hotspot"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="C:\Users\mhld\Desktop\blackjack-game"/>
+    <property name="style.color" value="always"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="C:\Users\mhld\AppData\Local\Temp\surefire10272336322674337421\surefirebooter-20251110121527837_3.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.6+7-LTS"/>
+    <property name="user.name" value="MHLD"/>
+    <property name="stdout.encoding" value="Cp1252"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-21.0.6+7"/>
+    <property name="maven.ext.class.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2024.3.2.2\plugins\maven\lib\maven-event-listener.jar"/>
+    <property name="localRepository" value="C:\Users\mhld\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="C:\Users\mhld\AppData\Local\Temp\"/>
+    <property name="idea.version" value="2025.2.4"/>
+    <property name="java.version" value="21.0.6"/>
+    <property name="user.dir" value="C:\Users\mhld\Desktop\blackjack-game"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="jansi.passthrough" value="true"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.language.format" value="de"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Users\mhld\AppData\Local\Programs\Eclipse Adoptium\jdk-21.0.6.7-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Users\mhld\Downloads\WINDOWS.X64_193000_db_home\bin;C:\Program Files\Eclipse Adoptium\jdk-21.0.6+7\bin;C:\Program Files (x86)\Common Files\Oracle\Java\java8path;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\Eclipse Adoptium\jdk-21.0.6+7\bin;C:\BMW\AIDA_FLIP\tools\apache-maven-3.9.9\bin;C:\Users\mhld\AppData\Roaming\npm;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\Users\mhld\AppData\Local\Programs\Eclipse Adoptium\jdk-21.0.6.7-hotspot\bin;C:\Users\mhld\AppData\Local\Microsoft\WindowsApps;C:\Users\mhld\AppData\Roaming\npm;;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="Cp1252"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="21.0.6+7-LTS"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="maven.repo.local" value="C:\Users\mhld\.m2\repository"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="testPlayRoundsAllPlayersBust" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.033">
+    <system-out><![CDATA[
+========================================
+*** ROUND 1 ***
+========================================
+
+=== Current hand ===
+dennis: 22
+lejla: 24
+
+
+========================================
+*** ROUND 2 ***
+========================================
+
+=== Current hand ===
+dennis: 22
+lejla: 24
+
+
+========================================
+*** ROUND 3 ***
+========================================
+
+=== Current hand ===
+dennis: 22
+lejla: 24
+
+
+========================================
+*** ROUND 4 ***
+========================================
+
+=== Current hand ===
+dennis: 22
+lejla: 24
+
+
+========================================
+*** ROUND 5 ***
+========================================
+
+=== Current hand ===
+dennis: 22
+lejla: 24
+
+========================================
+*** FINAL HANDS ***
+========================================
+dennis: 10♦, 6♣, 6♣ = 22
+lejla: 10♥, 8♠, 6♣ = 24
+========================================
+========================================
+*** lejla wins with 24 points! ***
+========================================
+]]></system-out>
+  </testcase>
+  <testcase name="testAceCalculationPotentialBust" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.0"/>
+  <testcase name="testInputPlayRoundsSkipsBustedAndStandingPlayers" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.003">
+    <system-out><![CDATA[
+========================================
+*** ROUND 1 ***
+========================================
+
+=== Current hand ===
+dennis: 18
+lejla: 19
+ethan: 15
+ellis: 9
+
+
+--- dennis turn ---
+Current hand: 18
+dennis, do you want to hit? (yes/no): 
+dennis draws: K♥
+New hand: 28
+dennis is over 21 and busted!
+
+--- lejla turn ---
+Current hand: 19
+lejla, do you want to hit? (yes/no): lejla stands (hand stays 19)
+
+--- ethan turn ---
+Current hand: 15
+ethan, do you want to hit? (yes/no): 
+ethan draws: 2♥
+New hand: 17
+
+--- ellis turn ---
+Current hand: 9
+ellis, do you want to hit? (yes/no): 
+ellis draws: 3♥
+New hand: 12
+
+========================================
+*** ROUND 2 ***
+========================================
+
+=== Current hand ===
+dennis: 28 (Busted)
+lejla: 19 (Standing)
+ethan: 17
+ellis: 12
+
+
+--- ethan turn ---
+Current hand: 17
+ethan, do you want to hit? (yes/no): 
+ethan draws: 4♥
+New hand: 21
+ethan has exactly 21!
+========================================
+*** FINAL HANDS ***
+========================================
+dennis: 10♦, 8♣, K♥ = 28 (Busted)
+lejla: 10♥, 9♠ = 19 (Standing)
+ethan: 6♥, 9♠, 2♥, 4♥ = 21
+ellis: 2♥, 7♠, 3♥ = 12
+========================================
+========================================
+*** ethan wins with 21 points! ***
+========================================
+]]></system-out>
+  </testcase>
+  <testcase name="testInputPlayerBusts" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.001">
+    <system-out><![CDATA[
+--- dennis turn ---
+Current hand: 16
+dennis, do you want to hit? (yes/no): 
+dennis draws: 6♥
+New hand: 22
+dennis is over 21 and busted!
+
+--- lejla turn ---
+Current hand: 10
+lejla, do you want to hit? (yes/no): 
+lejla draws: K♠
+New hand: 20
+]]></system-out>
+  </testcase>
+  <testcase name="testAceCalculation" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.0"/>
+  <testcase name="testPlayerInputMismatch" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.0">
+    <system-out><![CDATA[How many players want to play?: Please enter a number!
+How many players want to play?: Please enter name of player 1: Please enter name of player 2: 
+]]></system-out>
+  </testcase>
+  <testcase name="testDeckCreation" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.0"/>
+  <testcase name="testPlayerLimit" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.001">
+    <system-out><![CDATA[How many players want to play?: At least 2 or maximum 7 of players need to participate!
+How many players want to play?: Please enter name of player 1: Please enter name of player 2: 
+]]></system-out>
+  </testcase>
+  <testcase name="testPlayRoundsImmediateHighScoreTie" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.002">
+    <system-out><![CDATA[========================================
+*** FINAL HANDS ***
+========================================
+dennis: A♠, K♥ = 21
+lejla: A♦, Q♣ = 21
+========================================
+========================================
+*** TIE! ***
+Players with 21: dennis, lejla
+========================================
+]]></system-out>
+  </testcase>
+  <testcase name="testInputPlayerStands" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.001">
+    <system-out><![CDATA[
+--- dennis turn ---
+Current hand: 15
+dennis, do you want to hit? (yes/no): dennis stands (hand stays 15)
+
+--- lejla turn ---
+Current hand: 10
+lejla, do you want to hit? (yes/no): 
+lejla draws: 6♥
+New hand: 16
+]]></system-out>
+  </testcase>
+  <testcase name="testInputPlayRoundsStandingPlayersTie" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.003">
+    <system-out><![CDATA[
+========================================
+*** ROUND 1 ***
+========================================
+
+=== Current hand ===
+dennis: 15
+lejla: 10
+
+
+--- dennis turn ---
+Current hand: 15
+dennis, do you want to hit? (yes/no): 
+dennis draws: 3♥
+New hand: 18
+
+--- lejla turn ---
+Current hand: 10
+lejla, do you want to hit? (yes/no): 
+lejla draws: 8♥
+New hand: 18
+
+========================================
+*** ROUND 2 ***
+========================================
+
+=== Current hand ===
+dennis: 18
+lejla: 18
+
+
+--- dennis turn ---
+Current hand: 18
+dennis, do you want to hit? (yes/no): dennis stands (hand stays 18)
+
+--- lejla turn ---
+Current hand: 18
+lejla, do you want to hit? (yes/no): lejla stands (hand stays 18)
+========================================
+*** FINAL HANDS ***
+========================================
+dennis: 10♦, 5♣, 3♥ = 18 (Standing)
+lejla: 7♦, 3♥, 8♥ = 18 (Standing)
+========================================
+========================================
+*** TIE! ***
+Players with 18: dennis, lejla
+========================================
+]]></system-out>
+  </testcase>
+  <testcase name="testPlayRoundsImmediateHighScoreSingleWinner" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.001">
+    <system-out><![CDATA[========================================
+*** FINAL HANDS ***
+========================================
+dennis: A♠, K♥ = 21
+lejla: 10♦, 9♣ = 19
+========================================
+========================================
+*** dennis has 21 and wins! ***
+========================================
+]]></system-out>
+  </testcase>
+  <testcase name="testDeckInputMismatch" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.001">
+    <system-out><![CDATA[How many decks should be used this round?: Please enter a number!
+How many decks should be used this round?: ]]></system-out>
+  </testcase>
+  <testcase name="testInputPlayRoundsWinMidRound" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.002">
+    <system-out><![CDATA[
+========================================
+*** ROUND 1 ***
+========================================
+
+=== Current hand ===
+dennis: 15
+lejla: 10
+
+
+--- dennis turn ---
+Current hand: 15
+dennis, do you want to hit? (yes/no): 
+dennis draws: 6♥
+New hand: 21
+dennis has exactly 21!
+========================================
+*** FINAL HANDS ***
+========================================
+dennis: 10♦, 5♣, 6♥ = 21
+lejla: 7♦, 3♥ = 10
+========================================
+========================================
+*** dennis wins with 21 points! ***
+========================================
+]]></system-out>
+  </testcase>
+  <testcase name="testDeckLimit" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.001">
+    <system-out><![CDATA[How many decks should be used this round?: At least 1 or maximum 8 of decks can be used!
+How many decks should be used this round?: ]]></system-out>
+  </testcase>
+  <testcase name="testInputPlayRoundsAllPlayersStand" classname="com.github.dennismuehlegger.blackjack.BlackjackTests" time="0.001">
+    <system-out><![CDATA[
+========================================
+*** ROUND 1 ***
+========================================
+
+=== Current hand ===
+dennis: 19
+lejla: 18
+
+
+--- dennis turn ---
+Current hand: 19
+dennis, do you want to hit? (yes/no): dennis stands (hand stays 19)
+
+--- lejla turn ---
+Current hand: 18
+lejla, do you want to hit? (yes/no): lejla stands (hand stays 18)
+========================================
+*** FINAL HANDS ***
+========================================
+dennis: 10♦, 9♣ = 19 (Standing)
+lejla: 10♥, 8♠ = 18 (Standing)
+========================================
+========================================
+*** dennis wins with 19 points! ***
+========================================
+]]></system-out>
+  </testcase>
+</testsuite>
