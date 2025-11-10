@@ -23,7 +23,7 @@ public class CardLogic {
     private final List<Card> deck;
     private final List<Player> players;
     private final Scanner scanner;
-    private final Random random;
+    private Random random;
 
     public CardLogic(List<Card> deck, List<Player> players) {
         this(deck, players, new Scanner(System.in));
@@ -177,5 +177,6 @@ public class CardLogic {
     }
 
     public void setRandom(Random random) {
+        this.random = random;
     }
 }

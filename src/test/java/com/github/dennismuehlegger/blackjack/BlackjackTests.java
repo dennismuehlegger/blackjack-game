@@ -326,8 +326,8 @@ public class BlackjackTests {
     @Test
     public void testInputPlayRoundsStandingPlayersTie() {
         List<Card> deck = new ArrayList<>();
-        deck.add(new Card(3, "♥", "6"));
-        deck.add(new Card(8, "♥", "10"));
+        deck.add(new Card(3, "♥", "3"));
+        deck.add(new Card(8, "♥", "8"));
 
         Player dennis = new Player("dennis");
         dennis.addCard(new Card(10, "♦", "10"));
